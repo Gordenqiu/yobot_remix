@@ -6,12 +6,12 @@ yobot魔改版，支持新版公会战。<br>
 现已支持qq频道指令。<br>
 
 ## 转移至频道的食用方法
-1.申请qq频道bot，拿到AppID
-2.config中增加AppID
-3.运行gensokyo，详情请见[gensokyo](https://github.com/Hoshinonyaruko/Gensokyo)
-4.填写yobot反代地址
-5.在qq开放平台中添加指令，在yobot指令前加/，例如/状态，/报刀
-6.bot过审方法，隐藏没有错误反馈的指令，并将/创建公会和/加入公会指令放到最前面（测试人员会先测前面的）
+1.申请qq频道bot，拿到AppID<br>
+2.config中增加AppID<br>
+3.运行gensokyo，详情请见[gensokyo](https://github.com/Hoshinonyaruko/Gensokyo)<br>
+4.填写yobot反代地址<br>
+5.在qq开放平台中添加指令，在yobot指令前加/，例如/状态，/报刀<br>
+6.bot过审方法，隐藏没有错误反馈的指令，并将/创建公会和/加入公会指令放到最前面（测试人员会先测前面的）<br>
 
 ## 指令表
 > 大部分和原版yobot相同，只标出和原版yobot不同的命令
