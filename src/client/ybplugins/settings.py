@@ -115,6 +115,7 @@ class Setting:
                 del settings['host']
                 del settings['port']
                 del settings['access_token']
+                del settings['AppID']
                 return jsonify(
                     code=0,
                     message='success',

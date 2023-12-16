@@ -20,7 +20,6 @@ from .multi_cq_utils import refresh
 
 _logger = logging.getLogger(__name__)
 
-
 #初始化
 def init(self,
 		 glo_setting:Dict[str, Any],
@@ -70,6 +69,19 @@ def init(self,
 		with open(inipath,'w') as f:
 			f.write('[GROUPS]\n11111 = 22222')
 
+#频道bot专用
+def at_bot(self,cmd):
+    if(self.setting['AppID']) == "":
+        return cmd
+    raw_message = cmd.strip()
+    if(raw_message.startswith("[CQ:at,")==False):
+        return cmd
+    at_bot = '[CQ:at,qq={}]'.format(self.setting['AppID'])
+    if raw_message.startswith(at_bot + " /"):
+        raw_message = raw_message[len(at_bot) + 2:]  
+
+    return raw_message
+
 #定时任务
 def jobs(self):
 	trigger = CronTrigger(hour=5)
@@ -81,12 +93,12 @@ def jobs(self):
 
 #匹配
 def match(self, cmd):
-	if self.setting['clan_battle_mode'] != 'web':
-		return 0
-	if len(cmd) < 2:
-		return 0
-	return Commands.get(cmd[0:2], 0)
-
+    if self.setting['clan_battle_mode'] != 'web':
+        return 0
+    if len(cmd) < 2:
+        return 0
+    raw_message = at_bot(self, cmd)
+    return Commands.get(raw_message[0:2], 0)
 
 #执行
 def execute(self, match_num, ctx):
@@ -98,9 +110,10 @@ def execute(self, match_num, ctx):
 		self.setting['public_address'],
 		'{}clan/{}/'.format(self.setting['public_basepath'],
 		group_id))
+	cmd = at_bot(self,cmd)
 
 	if match_num == 1:  # 创建
-		match = re.match(r'^创建(?:([日台韩国])服)?[公工行]会$', cmd)
+		match = re.match(r'^创建(?:([日台韩国X])服)?[公工行]会$', cmd)
 		if not match: return
 		game_server = Server.get(match.group(1), 'cn')
 		try:
@@ -216,8 +229,8 @@ def execute(self, match_num, ctx):
 		return boss_status
 
 	elif match_num == 7:  # 预约
-		match = re.match(r'^预约([1-5]|表) *(?:[:：](.*))? *(?:\[CQ:at,qq=(\d+)\])? *$', cmd)
-		if not match: return
+		match = re.match(r'^预约 *([1-5]|表) *(?:[:：](.*))? *(?:\[CQ:at,qq=(\d+)\])? *$', cmd)
+		if not match: return '你要预约哪一只啊(っ °Д °;)っ\n如：预约 1'
 		msg = match.group(1)
 		note = match.group(2) or ''
 		behalf = match.group(3) or None
@@ -274,7 +287,7 @@ def execute(self, match_num, ctx):
 		return msg
 
 	elif match_num == 12:  # 申请
-		match = re.match(r'^(?:进|申请出刀)(| )([1-5]) *(补偿|补|b|bc|B|BC|Bc|bC)? *(?:\[CQ:at,qq=(\d+)\])? *$', cmd)
+		match = re.match(r'^(?:进 *|申请出刀 *)(| )([1-5]) *(补偿|补|b|bc|B|BC|Bc|bC)? *(?:\[CQ:at,qq=(\d+)\])? *$', cmd)
 		if not match: return '申请出刀格式错误惹(っ °Д °;)っ\n如：申请出刀1 or 申请出刀1补偿@xxx'
 		boss_num = match.group(2)
 		is_continue = match.group(3) and True or False
@@ -292,7 +305,7 @@ def execute(self, match_num, ctx):
 
 	elif match_num == 13:  # 取消
 		match = re.match(r'^取消 *([1-5]|挂树|申请出刀|申请|出刀|出刀all|报伤害|sl|SL|预约) *([1-5])? *(?:\[CQ:at,qq=(\d+)\])? *$', cmd)
-		if not match: return
+		if not match: return '你要取消什么呀(っ °Д °;)っ\n如：取消 挂树|申请出刀|申请|出刀|出刀all|报伤害|sl|SL|预约'
 		b = match.group(1)
 		boss_num = match.group(2) and match.group(2)
 		behalf = match.group(3) and int(match.group(3))
