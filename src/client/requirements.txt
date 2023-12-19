@@ -9,3 +9,4 @@ Pillow==9.4.0
 quart==0.18.3
 requests==2.25.1
 tzlocal==2.1
+werkzeug==2.2.2
